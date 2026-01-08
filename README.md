@@ -1,4 +1,4 @@
-# Mail_Merge_using_Excel_and_Word
+<img width="97" height="88" alt="image" src="https://github.com/user-attachments/assets/226fc281-9b3e-49ed-99b5-222e66ac28f8" /># Mail_Merge_using_Excel_and_Word
 This repository aims to create an easy to understand guide to creating mail merge list and e-mail template for tailored and customized e-mailing for marketing and information sharing.
 
 ---
@@ -11,7 +11,58 @@ This repository aims to create an easy to understand guide to creating mail merg
 
 ***Disclaimer: This project was part of a company project which involved sensitive information, thus any data and information used during the project is fabricated.***
 
-## Assembling the Excel file for the Mail Merge
+
+## Structure of the Excel File for the Mail Merge Process
+
+| Project   | Stakeholder | Last Name | First Name | E-mail                          |
+|-----------|-------------|-----------|------------|--------------------------------|
+| Project A | Company A   | Nagy      | Anna       | anna.nagy@companya.com         |
+
+
+
+
+As a start, we will start by opening a *blank* Word page for this tutorial, and finding the **Mailings** option on the Ribbon.
+<img width="954" height="275" alt="Word 1" src="https://github.com/user-attachments/assets/aa8bcfd7-0a62-4148-a461-1df818f0378d" />
+
+Then we click on the **Start Mail Merge** option.
+![Word 2](https://github.com/user-attachments/assets/6f89f9ed-b7d4-47ab-813e-11e19cf121c7)
+
+Then we click on the **Step-by-step Mail Merge Wizard** option. This will start the mail merge process which can be followed.
+![Word 3](https://github.com/user-attachments/assets/398fb2a3-0a70-4b88-8ae0-53cf02fc8cb5)
+
+I have prepared the primary text for the e-mail, but this can be performed at any step of the way.
+![Word 4](https://github.com/user-attachments/assets/fe79b85a-5d8f-4ef7-ad0c-2e12414adbae)
+
+
+`Step 1 - Select Document Type`. The E-mail template is chosen from these, but depending on the purpose of the document (it is intended for printing, or other purpose) additional ones can be chosen.
+![Word 5](https://github.com/user-attachments/assets/a518a0b7-af8a-4c57-8464-a10899857475)
+
+`Step 2 - Select starting document`. Existing documents or templates can also be utilized, for this guide, the *Use current document* option is chosen.
+![Word 6](https://github.com/user-attachments/assets/a1b48f5b-5352-44f1-a304-af77745a4fee)
+
+'Step 3 - Select recipients'. Existing outlook contacts can be chosen, or even typed out from scratch, we shall choose *Use an existing list* and browsing for the excel list already prepared.
+![Word 7](https://github.com/user-attachments/assets/1197ca8e-2c27-42a1-bf08-86a98a4be6f1)
+
+Once chosen, a new window will pop up with the sheets available within the Excel file, we would choose the one holding our recipient table.
+![Word 8](https://github.com/user-attachments/assets/c0b90d4c-ace7-4cd3-98b4-3ace127258af)
+
+Then a new window will pop-up which showcases our table's columns and information within it. The table's information can be freely viewed, sorted, filtered and edited here if chosen so.
+![Word 9](https://github.com/user-attachments/assets/8fa32e1f-9b25-4a91-8cea-0359200e6747)
+
+The 
+
+
+
+
+
+
+
+
+
+
+
+
+## Appendix - Assembling the Excel file for the Mail Merge
 Originally I have had Multiple Projects within our database for which I have needed to look up all stakeholders that are connected to them.
 After compiling all of them I have a dataset which I can work from.
 
@@ -81,6 +132,80 @@ Some of these stakeholders are legacy entries which are no longer functioning, t
 | Project C | Company S   | FALSE  |
 | Project C | Company T   | FALSE  |
 | Project D | Company A   | TRUE   |
+
+
+Then I have used an `XLOOKUP()` function which checked what Stakeholder is from my reference list (Column 1), and then put the corresponding contact information (Column 2) into the cell so I would have a contact column with the appropriate contact information for each company.
+
+`=XLOOKUP(TRUE, ISNUMBER(SEARCH($I$2:$I$26, D10)), $J$2:$J$26, "No match")`
+
+## Output
+
+
+| Project   | Stakeholder | Contact                                   |
+|-----------|-------------|-------------------------------------------|
+| Project A | Company A   | Nagy, Anna /AA <anna.nagy@companya.com>   |
+| Project A | Company B   | Smith, John /AA <john.smith@companyb.com> |
+| Project A | Company C   | Kovacs, Peter /AA <peter.kovacs@companyc.com> |
+| Project A | Company D   | Garcia, Maria /AA <maria.garcia@companyd.com> |
+| Project A | Company E   | Rossi, Luca /AA <luca.rossi@companye.com> |
+| Project B | Company A   | Nagy, Anna /AA <anna.nagy@companya.com>   |
+| Project B | Company B   | Smith, John /AA <john.smith@companyb.com> |
+| Project B | Company E   | Rossi, Luca /AA <luca.rossi@companye.com> |
+| Project C | Company F   | Chen, Li /AA <li.chen@companyf.com>       |
+| Project C | Company H   | Novak, Eva /AA <eva.novak@companyh.com>   |
+| Project C | Company I   | Patel, Riya /AA <riya.patel@companyi.com> |
+| Project C | Company A   | Nagy, Anna /AA <anna.nagy@companya.com>   |
+| Project C | Company O   | Müller, Lukas /AA <lukas.mueller@companyo.com> |
+| Project C | Company P   | Ahmed, Sara /AA <sara.ahmed@companyp.com> |
+| Project C | Company Q   | Johnson, Emily /AA <emily.johnson@companyq.com> |
+| Project C | Company S   | Dubois, Claire /AA <claire.dubois@companys.com> |
+| Project C | Company T   | Tanaka, Hiro /AA <hiro.tanaka@companyt.com> |
+| Project D | Company A   | Nagy, Anna /AA <anna.nagy@companya.com>   |
+
+
+*The contact available contained the information text in one cell, combining the Last Name, First Name & E-mail address, based on the pattern shown in the Contact column.*
+
+In order to generate the Last Name, First Name and E-mail address columns for our mail merge data, 3 excel functions were used to extract each portion of text from the *Contact* column.
+
+**Last Name**
+`=TRIM(TEXTBEFORE(E2, ","))`
+
+**First Name**
+`=LET(
+  s, E2,
+  afterComma, TEXTAFTER(s, "","", 1),
+  cutAt, IFERROR(TEXTBEFORE(afterComma, "" /""), TEXTBEFORE(afterComma, ""<"")),
+  TRIM(cutAt)
+)`
+
+**E-mail**
+`=TEXTBEFORE(TEXTAFTER(E2, "<"), ">")`
+
+
+
+### Output
+
+
+| Project   | Stakeholder | Last Name | First Name | E-mail                          |
+|-----------|-------------|-----------|------------|--------------------------------|
+| Project A | Company A   | Nagy      | Anna       | anna.nagy@companya.com         |
+| Project A | Company B   | Smith     | John       | john.smith@companyb.com        |
+| Project A | Company C   | Kovacs    | Peter      | peter.kovacs@companyc.com      |
+| Project A | Company D   | Garcia    | Maria      | maria.garcia@companyd.com      |
+| Project A | Company E   | Rossi     | Luca       | luca.rossi@companye.com        |
+| Project B | Company A   | Nagy      | Anna       | anna.nagy@companya.com         |
+| Project B | Company B   | Smith     | John       | john.smith@companyb.com        |
+| Project B | Company E   | Rossi     | Luca       | luca.rossi@companye.com        |
+| Project C | Company F   | Chen      | Li         | li.chen@companyf.com           |
+| Project C | Company H   | Novak     | Eva        | eva.novak@companyh.com         |
+| Project C | Company I   | Patel     | Riya       | riya.patel@companyi.com        |
+| Project C | Company A   | Nagy      | Anna       | anna.nagy@companya.com         |
+| Project C | Company O   | Müller    | Lukas      | lukas.mueller@companyo.com     |
+| Project C | Company P   | Ahmed     | Sara       | sara.ahmed@companyp.com        |
+| Project C | Company Q   | Johnson   | Emily      | emily.johnson@companyq.com     |
+| Project C | Company S   | Dubois    | Claire     | claire.dubois@companys.com     |
+| Project C | Company T   | Tanaka    | Hiro       | hiro.tanaka@companyt.com       |
+| Project D | Company A   | Nagy      | Anna       | anna.nagy@companya.com         |
 
 
 
